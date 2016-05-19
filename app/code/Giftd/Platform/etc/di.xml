@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+    <type name="Magento\SalesRule\Model\Quote\Discount">
+        <plugin name="giftd_platform_create_or_update_sales_rule" type="Giftd\Platform\Plugin\Model\SalesRule\Quote\Discount"
+                sortOrder="10"/>
+    </type>
+</config>

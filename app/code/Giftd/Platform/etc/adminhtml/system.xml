@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="giftd" translate="label" sortOrder="1000">
+            <label>Giftd</label>
+        </tab>
+        <section id="giftd_platform" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+            <class>separator-top</class>
+            <label>Module Settings</label>
+            <tab>giftd</tab>
+            <resource>Giftd_Platform::config</resource>
+            <group id="settings" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Module Settings</label>
+                <field id="user_id" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Giftd User ID (user_id)</label>
+                    <!--comment>user_id</comment-->
+                </field>
+                <field id="api_key" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Giftd API Key (api_key)</label>
+                    <!--comment>api_key</comment-->
+                </field>
+                <field id="partner_token_prefix" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Partner Token Prefix</label>
+                    <frontend_model>Giftd\Platform\Block\Adminhtml\System\Config\Form\Field\Disabled</frontend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

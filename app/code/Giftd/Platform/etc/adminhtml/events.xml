@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="admin_system_config_changed_section_giftd_platform">
+        <observer name="giftd_platform_send_partner_info" instance="Giftd\Platform\Observer\Config\GiftdPlatformSectionChangedObserver" />
+    </event>
+    <event name="controller_action_predispatch_adminhtml_system_config_save">
+        <observer name="giftd_platform_set_old_config_values_to_registry" instance="Giftd\Platform\Observer\Config\SetOldConfigValuesToRegistryObserver" />
+    </event>
+</config>
