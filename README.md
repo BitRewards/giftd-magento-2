@@ -6,9 +6,8 @@ Installation
 ------------
 1. [Download archive with module](https://github.com/Giftd/giftd-magento-2/) from repository.
 2. Upload archive contents to magento root directory. Replace existing files if neccessary.
-3. Run commands for enable module:
-    *    <code>bin/magento module:enable Giftd_Platform</code>
-    *    <code>bin/magento setup:upgrade</code>
+3. Run command for enable module: <code>bin/magento module:enable Giftd_Platform</code>
+4. Run command for install module: <code>bin/magento setup:upgrade</code>
 
 Configuration
 -------------
