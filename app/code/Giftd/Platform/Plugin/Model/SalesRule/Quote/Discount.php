@@ -164,8 +164,6 @@ class Discount
         $discount = $card->amount_available;
         $minAmount = $card->min_amount_total;
 
-        $isMultiple = $card->charge_type == 'multiple';
-
         $name = 'Giftd card';
         $customerGroupIds = $this->_getCustomerGroupIds();
         $websiteIds = [$websiteId];
@@ -179,8 +177,8 @@ class Discount
             'customer_group_ids' => $customerGroupIds,
             'coupon_type' => 2,
             'coupon_code' => $couponCode,
-            'uses_per_coupon' => $isMultiple ? 0 : 1,
-            'uses_per_customer' => $isMultiple ? 0 : 1,
+            'uses_per_coupon' => 1,
+            'uses_per_customer' => 1,
             'from_date' => null,
             'to_date' => null,
             'sort_order' => null,
