@@ -26,6 +26,11 @@ class UpdateJsCodeObserver implements ObserverInterface
     protected $_resourceConfig;
 
     /**
+     * @var \Magento\Framework\App\Config\ReinitableConfigInterface
+     */
+    protected $_appConfig;
+
+    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
@@ -34,11 +39,13 @@ class UpdateJsCodeObserver implements ObserverInterface
         \Psr\Log\LoggerInterface $logger,
         \Giftd\Platform\Helper\Data $giftdHelper,
         \Magento\Config\Model\ResourceModel\Config $resourceConfig,
+        \Magento\Framework\App\Config\ReinitableConfigInterface $config,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->_logger = $logger;
         $this->_giftdHelper = $giftdHelper;
         $this->_resourceConfig = $resourceConfig;
+        $this->_appConfig = $config;
         $this->_storeManager = $storeManager;
     }
 
@@ -86,6 +93,8 @@ class UpdateJsCodeObserver implements ObserverInterface
                 \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES,
                 (int) $store->getWebsiteId()
             );
+
+            $this->_appConfig->reinit();
         } catch (Giftd_Exception $e) {
 
         } catch (LocalizedException $e) {

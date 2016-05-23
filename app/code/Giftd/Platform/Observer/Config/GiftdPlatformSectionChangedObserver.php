@@ -35,7 +35,7 @@ class GiftdPlatformSectionChangedObserver implements ObserverInterface
     /**
      * Application config
      *
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var \Magento\Framework\App\Config\ReinitableConfigInterface
      */
     protected $_appConfig;
 
@@ -54,7 +54,7 @@ class GiftdPlatformSectionChangedObserver implements ObserverInterface
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magento\Backend\Model\Auth\Session $authSession
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $config
+     * @param \Magento\Framework\App\Config\ReinitableConfigInterface $config
      * @param \Magento\Config\Model\ResourceModel\Config $resourceConfig
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
@@ -63,7 +63,7 @@ class GiftdPlatformSectionChangedObserver implements ObserverInterface
         \Magento\Framework\Registry $coreRegistry,
         \Magento\Backend\Model\Auth\Session $authSession,
         \Magento\Framework\Message\ManagerInterface $messageManager,
-        \Magento\Framework\App\Config\ScopeConfigInterface $config,
+        \Magento\Framework\App\Config\ReinitableConfigInterface $config,
         \Magento\Config\Model\ResourceModel\Config $resourceConfig,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
@@ -117,11 +117,20 @@ class GiftdPlatformSectionChangedObserver implements ObserverInterface
         if ($install) {
             $this->_install($newUserId, $newApiKey, $website);
         }
+
+        try {
+            $this->_appConfig->reinit();
+        } catch (\Exception $e) {
+
+        }
     }
 
     protected function _install($userId, $apiKey, \Magento\Store\Api\Data\WebsiteInterface $website)
     {
         try {
+            $scope = \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES;
+            $scopeId = (int) $website->getId();
+
             /**
              * @var $website \Magento\Store\Model\Website
              */
@@ -129,9 +138,9 @@ class GiftdPlatformSectionChangedObserver implements ObserverInterface
 
             $data = [
                 'email' => $user->getEmail(),
-                'phone' => $this->_appConfig->getValue(\Magento\Store\Model\Information::XML_PATH_STORE_INFO_PHONE),
+                'phone' => $this->_appConfig->getValue(\Magento\Store\Model\Information::XML_PATH_STORE_INFO_PHONE, $scope, $scopeId),
                 'name'  => $user->getName(),
-                'url'   => $this->_appConfig->getValue(\Magento\Store\Model\Store::XML_PATH_UNSECURE_BASE_URL),
+                'url'   => $this->_appConfig->getValue(\Magento\Store\Model\Store::XML_PATH_UNSECURE_BASE_URL, $scope, $scopeId),
                 'title' => $website->getName(),
                 'magento_version' => \Magento\Framework\AppInterface::VERSION
             ];
@@ -147,8 +156,8 @@ class GiftdPlatformSectionChangedObserver implements ObserverInterface
             $this->_resourceConfig->saveConfig(
                 \Giftd\Platform\Helper\Data::XML_PATH_COUPON_PREFIX,
                 $couponPrefix,
-                \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES,
-                (int) $website->getId()
+                $scope,
+                $scopeId
             );
 
             $result = $client->query('partner/getJs');
@@ -158,8 +167,8 @@ class GiftdPlatformSectionChangedObserver implements ObserverInterface
             $this->_resourceConfig->saveConfig(
                 \Giftd\Platform\Helper\Data::XML_PATH_JS_CODE,
                 $code,
-                \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES,
-                (int) $website->getId()
+                $scope,
+                $scopeId
             );
 
             $this->_messageManager->addSuccess(__('You have successfully enabled Giftd module!'));
@@ -187,11 +196,14 @@ class GiftdPlatformSectionChangedObserver implements ObserverInterface
             $this->_logger->critical($e);
         }
 
+        $scope = \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES;
+        $scopeId = (int) $website->getId();
+
         try {
             $this->_resourceConfig->deleteConfig(
                 \Giftd\Platform\Helper\Data::XML_PATH_JS_CODE,
-                \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES,
-                (int) $website->getId()
+                $scope,
+                $scopeId
             );
         } catch (LocalizedException $e) {
 
@@ -202,8 +214,8 @@ class GiftdPlatformSectionChangedObserver implements ObserverInterface
         try {
             $this->_resourceConfig->deleteConfig(
                 \Giftd\Platform\Helper\Data::XML_PATH_COUPON_PREFIX,
-                \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITES,
-                (int) $website->getId()
+                $scope,
+                $scopeId
             );
         } catch (LocalizedException $e) {
 
